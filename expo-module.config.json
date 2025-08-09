@@ -1,0 +1,9 @@
+{
+  "platforms": ["apple", "android", "web"],
+  "apple": {
+    "modules": ["ExpoRemoveBackgroundModule"]
+  },
+  "android": {
+    "modules": ["expo.modules.removebackground.ExpoRemoveBackgroundModule"]
+  }
+}
