@@ -1,7 +1,7 @@
 {
   "name": "expo-remove-background",
   "version": "0.1.0",
-  "description": "My new module",
+  "description": "Remove background from images using iOS 17 Vision framework",
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "scripts": {
@@ -19,7 +19,12 @@
     "react-native",
     "expo",
     "expo-remove-background",
-    "ExpoRemoveBackground"
+    "ExpoRemoveBackground",
+    "background-removal",
+    "image-processing",
+    "vision-framework",
+    "ios17",
+    "machine-learning"
   ],
   "repository": "https://github.com/NeitherCupid139/expo-remove-background",
   "bugs": {

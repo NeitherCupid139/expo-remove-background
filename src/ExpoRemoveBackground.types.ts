@@ -17,3 +17,9 @@ export type ExpoRemoveBackgroundViewProps = {
   onLoad: (event: { nativeEvent: OnLoadEventPayload }) => void;
   style?: StyleProp<ViewStyle>;
 };
+
+export type RemoveBackgroundResult = {
+  uri: string;
+  width: number;
+  height: number;
+};
