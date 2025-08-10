@@ -13,7 +13,8 @@
     "prepublishOnly": "expo-module prepublishOnly",
     "expo-module": "expo-module",
     "open:ios": "xed example/ios",
-    "open:android": "open -a \"Android Studio\" example/android"
+    "open:android": "open -a \"Android Studio\" example/android",
+    "release": "standard-version"
   },
   "keywords": [
     "react-native",
@@ -36,9 +37,10 @@
   "dependencies": {},
   "devDependencies": {
     "@types/react": "~19.0.0",
-    "expo-module-scripts": "^4.1.10",
     "expo": "~53.0.0",
-    "react-native": "0.79.1"
+    "expo-module-scripts": "^4.1.10",
+    "react-native": "0.79.1",
+    "standard-version": "^9.5.0"
   },
   "peerDependencies": {
     "expo": "*",

@@ -11,6 +11,8 @@ Remove background from images using iOS 17 Vision framework in Expo/React Native
 - 🖼️ **Multiple Formats**: Supports both local and remote images
 - ⚡ **High Performance**: Native implementation for optimal speed
 
+![preview](/assets/example.png)
+
 ## Installation
 
 ```bash
