@@ -1,32 +1,175 @@
-name: Publish to npm
+name: Publish to NPM
 
 on:
   push:
     branches:
       - main
+  workflow_dispatch:
+    inputs:
+      version_type:
+        description: 'Version bump type'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+
+permissions:
+  contents: write
+  packages: write
+  pull-requests: write
 
 jobs:
   publish:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
+        uses: actions/checkout@v4
         with:
-          node-version: '16'
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN || secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
 
       - name: Install dependencies
-        run: npm install
+        run: bun install
 
-      - name: Set npm auth token
-        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+      - name: Run tests (if any)
+        run: bun test || echo "No tests found"
 
-      - name: Update version and publish
+      - name: Configure Git
         run: |
-          npm run release  
-          npm publish
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+      - name: Check if version needs update
+        id: check_version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "needs_update=true" >> $GITHUB_OUTPUT
+            echo "version_type=${{ github.event.inputs.version_type }}" >> $GITHUB_OUTPUT
+          else
+            # Check if this is a version bump commit
+            if git log --format=%B -n 1 | grep -q "^chore: bump version"; then
+              echo "needs_update=false" >> $GITHUB_OUTPUT
+              echo "This is a version bump commit, skipping version update"
+            else
+              echo "needs_update=true" >> $GITHUB_OUTPUT
+              # Auto-detect version type based on commit messages
+              if git log --format=%B -n 1 | grep -q "BREAKING CHANGE\|!:"; then
+                echo "version_type=major" >> $GITHUB_OUTPUT
+              elif git log --format=%B -n 1 | grep -q "^feat"; then
+                echo "version_type=minor" >> $GITHUB_OUTPUT
+              else
+                echo "version_type=patch" >> $GITHUB_OUTPUT
+              fi
+            fi
+          fi
+
+      - name: Bump version
+        if: steps.check_version.outputs.needs_update == 'true'
+        id: version
+        run: |
+          VERSION_TYPE="${{ steps.check_version.outputs.version_type }}"
+          echo "Bumping $VERSION_TYPE version"
+          npm version $VERSION_TYPE --no-git-tag-version
+          
+          NEW_VERSION=$(node -p "require('./package.json').version")
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "version_type=$VERSION_TYPE" >> $GITHUB_OUTPUT
+
+      - name: Commit and push version bump
+        if: steps.check_version.outputs.needs_update == 'true'
+        run: |
+          git add package.json
+          git commit -m "chore: bump version to v${{ steps.version.outputs.new_version }}"
+          git tag "v${{ steps.version.outputs.new_version }}"
+          git push origin main
+          git push origin "v${{ steps.version.outputs.new_version }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN || secrets.GITHUB_TOKEN }}
+
+      - name: Get current version
+        if: steps.check_version.outputs.needs_update == 'false'
+        id: current_version
+        run: |
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          echo "new_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Build package
+        run: bun run build || echo "No build script found"
+
+      - name: Publish to NPM
+        run: |
+          npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Create GitHub Release
+        if: steps.check_version.outputs.needs_update == 'true'
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: "v${{ steps.version.outputs.new_version }}"
+          name: "Release v${{ steps.version.outputs.new_version }}"
+          body: |
+            ## Changes
+            
+            Version bump: ${{ steps.version.outputs.version_type }}
+            
+            ### Features
+            - 🎯 iOS 17+ Support: Leverages Apple's latest Vision framework for accurate background removal
+            - 🚀 Easy Integration: Simple API with just one function call
+            - 📱 Expo Compatible: Works seamlessly with Expo managed workflow
+            - 🖼️ Multiple Formats: Supports both local and remote images
+            - ⚡ High Performance: Native implementation for optimal speed
+            
+            ### Installation
+            ```bash
+            bun add react-native-remove-background
+            ```
+            
+            See [README.md](README.md) for detailed usage instructions.
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN || secrets.GITHUB_TOKEN }}
+
+      - name: Create GitHub Release (for existing version)
+        if: steps.check_version.outputs.needs_update == 'false'
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: "v${{ steps.current_version.outputs.new_version }}"
+          name: "Release v${{ steps.current_version.outputs.new_version }}"
+          body: |
+            ## Re-release
+            
+            Re-publishing version v${{ steps.current_version.outputs.new_version }} to NPM.
+            
+            ### Features
+            - 🎯 iOS 17+ Support: Leverages Apple's latest Vision framework for accurate background removal
+            - 🚀 Easy Integration: Simple API with just one function call
+            - 📱 Expo Compatible: Works seamlessly with Expo managed workflow
+            - 🖼️ Multiple Formats: Supports both local and remote images
+            - ⚡ High Performance: Native implementation for optimal speed
+            
+            ### Installation
+            ```bash
+            bun add react-native-remove-background
+            ```
+            
+            See [README.md](README.md) for detailed usage instructions.
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN || secrets.GITHUB_TOKEN }}
