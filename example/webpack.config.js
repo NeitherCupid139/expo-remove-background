@@ -6,7 +6,7 @@ module.exports = async (env, argv) => {
     {
       ...env,
       babel: {
-        dangerouslyAddModulePathsToTranspile: ['expo-remove-background'],
+        dangerouslyAddModulePathsToTranspile: ['react-native-remove-background'],
       },
     },
     argv

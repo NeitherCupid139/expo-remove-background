@@ -1,6 +1,6 @@
 {
-  "name": "expo-remove-background-example",
-  "version": "1.0.0",
+  "name": "react-native-remove-background-example",
+  "version": "0.0.1",
   "main": "index.ts",
   "scripts": {
     "start": "expo start",

@@ -1,5 +1,5 @@
 {
-  "name": "expo-remove-background",
+  "name": "react-native-remove-background",
   "version": "0.1.0",
   "description": "Remove background from images using iOS 17 Vision framework",
   "main": "build/index.js",
@@ -18,21 +18,21 @@
   "keywords": [
     "react-native",
     "expo",
-    "expo-remove-background",
-    "ExpoRemoveBackground",
+    "react-native-remove-background",
+    "ReactNativeRemoveBackground",
     "background-removal",
     "image-processing",
     "vision-framework",
     "ios17",
     "machine-learning"
   ],
-  "repository": "https://github.com/NeitherCupid139/expo-remove-background",
+  "repository": "https://github.com/NeitherCupid139/react-native-remove-background",
   "bugs": {
-    "url": "https://github.com/NeitherCupid139/expo-remove-background/issues"
+    "url": "https://github.com/NeitherCupid139/react-native-remove-background/issues"
   },
   "author": "creedchung <2694674113@qq.com> (https://github.com/NeitherCupid139)",
   "license": "MIT",
-  "homepage": "https://github.com/NeitherCupid139/expo-remove-background#readme",
+  "homepage": "https://github.com/NeitherCupid139/react-native-remove-background#readme",
   "dependencies": {},
   "devDependencies": {
     "@types/react": "~19.0.0",

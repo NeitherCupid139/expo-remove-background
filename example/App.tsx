@@ -1,10 +1,10 @@
 import { useEvent } from 'expo';
-import ExpoRemoveBackground, { ExpoRemoveBackgroundView, removeBackground } from 'expo-remove-background';
+import ReactNativeRemoveBackground, { ReactNativeRemoveBackgroundView, removeBackground } from 'react-native-remove-background';
 import { Button, SafeAreaView, ScrollView, Text, View, Image, Alert } from 'react-native';
 import { useState } from 'react';
 
 export default function App() {
-  const onChangePayload = useEvent(ExpoRemoveBackground, 'onChange');
+  const onChangePayload = useEvent(ReactNativeRemoveBackground, 'onChange');
   const [originalImage, setOriginalImage] = useState<string | null>(null);
   const [processedImage, setProcessedImage] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);

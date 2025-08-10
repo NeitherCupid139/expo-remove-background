@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "expo-remove-background-example",
-    "slug": "expo-remove-background-example",
-    "version": "1.0.0",
+    "name": "react-native-remove-background-example",
+    "slug": "react-native-remove-background-example",
+    "version": "0.0.1",     
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",

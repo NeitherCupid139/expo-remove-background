@@ -1,4 +1,4 @@
-# expo-remove-background
+# react-native-remove-background
 
 Remove background from images using iOS 17 Vision framework in Expo/React Native apps.
 ⚠️Android is not supported.When ML Kit Subject Segmentation is available, it will be used.
@@ -14,13 +14,13 @@ Remove background from images using iOS 17 Vision framework in Expo/React Native
 ## Installation
 
 ```bash
-bun add expo-remove-background
+bun add react-native-remove-background
 ```
 
 ## Usage
 
 ```typescript
-import { removeBackground } from 'expo-remove-background';
+import { removeBackground } from 'react-native-remove-background';
 
 // Remove background from an image
 const processImage = async () => {

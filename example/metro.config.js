@@ -19,7 +19,7 @@ config.resolver.nodeModulesPaths = [
 ];
 
 config.resolver.extraNodeModules = {
-  'expo-remove-background': '..',
+  'react-native-remove-background': '..',
 };
 
 config.watchFolders = [path.resolve(__dirname, '..')];

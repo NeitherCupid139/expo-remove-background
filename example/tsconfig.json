@@ -3,8 +3,8 @@
   "compilerOptions": {
     "strict": true,
     "paths": {
-      "expo-remove-background": ["../src/index"],
-      "expo-remove-background/*": ["../src/*"]
+      "react-native-remove-background": ["../src/index"],
+      "react-native-remove-background/*": ["../src/*"]
     }
   }
 }

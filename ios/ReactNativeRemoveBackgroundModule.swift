@@ -4,15 +4,15 @@ import CoreImage
 import CoreImage.CIFilterBuiltins
 import UIKit
 
-public class ExpoRemoveBackgroundModule: Module {
+public class ReactNativeRemoveBackgroundModule: Module {
   // Each module class must implement the definition function. The definition consists of components
   // that describes the module's functionality and behavior.
   // See https://docs.expo.dev/modules/module-api for more details about available components.
   public func definition() -> ModuleDefinition {
     // Sets the name of the module that JavaScript code will use to refer to the module. Takes a string as an argument.
     // Can be inferred from module's class name, but it's recommended to set it explicitly for clarity.
-    // The module will be accessible from `requireNativeModule('ExpoRemoveBackground')` in JavaScript.
-    Name("ExpoRemoveBackground")
+    // The module will be accessible from `requireNativeModule('ReactNativeRemoveBackground')` in JavaScript.
+    Name("ReactNativeRemoveBackground")
 
     // Sets constant properties on the module. Can take a dictionary or a closure that returns a dictionary.
     Constants([
@@ -43,9 +43,9 @@ public class ExpoRemoveBackgroundModule: Module {
 
     // Enables the module to be used as a native view. Definition components that are accepted as part of the
     // view definition: Prop, Events.
-    View(ExpoRemoveBackgroundView.self) {
+    View(ReactNativeRemoveBackgroundView.self) {
       // Defines a setter for the `url` prop.
-      Prop("url") { (view: ExpoRemoveBackgroundView, url: URL) in
+      Prop("url") { (view: ReactNativeRemoveBackgroundView, url: URL) in
         if view.webView.url != url {
           view.webView.load(URLRequest(url: url))
         }
@@ -59,7 +59,7 @@ public class ExpoRemoveBackgroundModule: Module {
   
   private func removeBackgroundFromImage(imageUri: String) async throws -> [String: Any] {
     guard let url = URL(string: imageUri) else {
-      throw NSError(domain: "ExpoRemoveBackground", code: 1, userInfo: [NSLocalizedDescriptionKey: "Invalid image URI"])
+      throw NSError(domain: "ReactNativeRemoveBackground", code: 1, userInfo: [NSLocalizedDescriptionKey: "Invalid image URI"])
     }
     
     let imageData: Data
@@ -72,11 +72,11 @@ public class ExpoRemoveBackgroundModule: Module {
     
     guard let uiImage = UIImage(data: imageData),
           let inputImage = CIImage(image: uiImage) else {
-      throw NSError(domain: "ExpoRemoveBackground", code: 2, userInfo: [NSLocalizedDescriptionKey: "Failed to create CIImage from data"])
+      throw NSError(domain: "ReactNativeRemoveBackground", code: 2, userInfo: [NSLocalizedDescriptionKey: "Failed to create CIImage from data"])
     }
     
     guard let maskImage = try await createMask(from: inputImage) else {
-      throw NSError(domain: "ExpoRemoveBackground", code: 3, userInfo: [NSLocalizedDescriptionKey: "Failed to create mask"])
+      throw NSError(domain: "ReactNativeRemoveBackground", code: 3, userInfo: [NSLocalizedDescriptionKey: "Failed to create mask"])
     }
     
     let outputImage = applyMask(mask: maskImage, to: inputImage)
@@ -88,7 +88,7 @@ public class ExpoRemoveBackgroundModule: Module {
     let fileURL = tempDir.appendingPathComponent(fileName)
     
     guard let imageData = finalImage.pngData() else {
-      throw NSError(domain: "ExpoRemoveBackground", code: 4, userInfo: [NSLocalizedDescriptionKey: "Failed to convert image to PNG data"])
+      throw NSError(domain: "ReactNativeRemoveBackground", code: 4, userInfo: [NSLocalizedDescriptionKey: "Failed to convert image to PNG data"])
     }
     
     try imageData.write(to: fileURL)
@@ -102,7 +102,7 @@ public class ExpoRemoveBackgroundModule: Module {
   
   private func createMask(from inputImage: CIImage) async throws -> CIImage? {
     guard #available(iOS 17.0, *) else {
-      throw NSError(domain: "ExpoRemoveBackground", code: 5, userInfo: [NSLocalizedDescriptionKey: "Background removal requires iOS 17.0 or later"])
+      throw NSError(domain: "ReactNativeRemoveBackground", code: 5, userInfo: [NSLocalizedDescriptionKey: "Background removal requires iOS 17.0 or later"])
     }
     
     let request = VNGenerateForegroundInstanceMaskRequest()
