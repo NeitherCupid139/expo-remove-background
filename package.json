@@ -1,6 +1,6 @@
 {
   "name": "react-native-remove-background",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Remove background from images using iOS 17 Vision framework",
   "main": "build/index.js",
   "types": "build/index.d.ts",
